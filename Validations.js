@@ -463,3 +463,51 @@ function showItemError(item, msg) {
 if ($v('P1_FIELD').trim() === '') {
   showItemError('P1_FIELD', 'This field cannot be empty');
 }
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// practical usage example of checkbox grp and date picker which checks if end date is greater than start date
+// step 1 : create a dynamic action on submit btn for checkbox grp and a dynamic action on end date for date picker 
+//step 2 : make the when of that dynamic action on event : click and selection type  : btn and give btn of SUBMIT for checkbox and in end date make when of change and items p1_end and in truew provide execute js code which will be : 
+
+// date picker end date validator checker
+var startDateStr = $v('P1_START');
+var endDateStr = $v('P1_END');
+
+// Parse as Date objects
+var startDate = new Date(startDateStr);
+var endDate = new Date(endDateStr);
+
+if (startDateStr && endDateStr && endDate <= startDate) {
+  apex.message.clearErrors();
+  apex.message.showErrors([{
+    type: "error",
+    location: "inline",
+    pageItem: "P1_END",
+    message: "End Date must be greater than Start Date.",
+    unsafe: false
+  }]);
+  
+  apex.event.gCancelEvent = true; // Prevent submit
+} 
+
+//checkbox grp validator checker : 
+var checkboxes = document.querySelectorAll('input[name="P1_CHECKBOX_GRP"]:checked');
+
+if (checkboxes.length === 0) {
+  apex.message.clearErrors();
+  apex.message.showErrors([{
+    type: "error",
+    location: "inline",
+    pageItem: "P1_CHECKBOX_GRP",
+    message: "Please select at least one option.",
+    unsafe: false
+  }]);
+
+  // Prevent form submission
+  apex.event.gCancelEvent = true;
+}
+
+
